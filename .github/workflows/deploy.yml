@@ -21,7 +21,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        workspace: [pmi]
+        workspace: [dev, prod]
         account_role: [ "arn:aws:iam::097756506425:role/GitHubRole" ]
 
     steps:
