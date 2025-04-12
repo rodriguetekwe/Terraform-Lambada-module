@@ -7,7 +7,7 @@ module "lambda_function" {
   runtime                = var.runtime
   memory_size            = var.memory_size
   timeout                = var.timeout
-  source_path           = "../scripts/lambda_function.zip"
+  source_path           = "scripts/lambda_function.zip"
   log_retention_in_days  = var.log_retention_in_days
   region                 = var.region
   environment_variables  = var.environment_variables
