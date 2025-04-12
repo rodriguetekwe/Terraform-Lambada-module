@@ -4,7 +4,7 @@ module "lambda_function" {
   function_name          = "my-lambda-function"
   description           = "Process incoming events"
   handler               = "index.handler"
-  runtime               = "nodejs14.x"
+  runtime               = "nodejs20.x"
   memory_size           = 256
   timeout               = 10
   source_path           = "scripts/lambda_function.zip"
