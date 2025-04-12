@@ -1,27 +1,27 @@
 module "lambda_function" {
   source = "./modules/lambda"
 
-  function_name          = "my-lambda-function"
-  description           = "Process incoming events"
-  handler               = "index.handler"
-  runtime               = "nodejs20.x"
-  memory_size           = 256
-  timeout               = 10
+  function_name          = var.function_name
+  description            = var.description
+  handler                = var.handler
+  runtime                = var.runtime
+  memory_size            = var.memory_size
+  timeout                = var.timeout
   source_path           = "scripts/lambda_function.zip"
-  log_retention_in_days = 14
-  region = "us-east-1"
-  environment_variables = {
-    ENVIRONMENT = "production"
-    API_KEY     = "secret-key"
-  }
+  log_retention_in_days  = var.log_retention_in_days
+  region                 = var.region
+  environment_variables  = var.environment_variables
 
-  policies = [
-    "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
-    "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-  ]
+  policies = var.policies
 
-  tags = {
-    Team        = "DevOps"
-    Application = "ServerlessApp"
+  tags = var.tags
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "backend-tf-097756506425"
+    key            = "multiple-env/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
   }
 }

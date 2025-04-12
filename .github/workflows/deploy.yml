@@ -52,6 +52,9 @@ jobs:
           export AWS_REGION=us-east-1
           terraform init
 
+      - name: Select Terraform Workspace
+        run: terraform workspace select ${{ matrix.workspace }} || terraform workspace new ${{ matrix.workspace }}
+  
       - name: Terraform Plan
         run: terraform plan -out=tfplan-${{ matrix.workspace }} -var-file="environments/${{ matrix.workspace }}/terraform.tfvars"
 
