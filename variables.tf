@@ -51,11 +51,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "source_path" {
-  description = "Path to the Lambda function source code file or directory"
-  type        = string
-  default     = null
-}
 
 variable "security_group_ids" {
   description = "List of security group IDs for VPC configuration"
