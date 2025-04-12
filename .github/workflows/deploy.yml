@@ -10,7 +10,7 @@ on:
 
 env:
   AWS_REGION: "us-east-1"
-  CENTRAL_BACKEND_ROLE_ARN: "arn:aws:iam::689537938064:role/GitHubAction-AssumeRoleWithAction"
+  CENTRAL_BACKEND_ROLE_ARN: "arn:aws:iam::097756506425:role/GitHubRole"
 
 jobs:
   terraform-plan:
@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         workspace: [pmi]
-        account_role: [ "arn:aws:iam::689537938064:role/GitHubAction-AssumeRoleWithAction" ]
+        account_role: [ "arn:aws:iam::097756506425:role/GitHubRole" ]
 
     steps:
       - name: Checkout Code
