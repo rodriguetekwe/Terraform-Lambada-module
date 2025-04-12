@@ -1,0 +1,60 @@
+name: Terraform Deployment
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  AWS_REGION: "us-east-1"
+  CENTRAL_BACKEND_ROLE_ARN: "arn:aws:iam::689537938064:role/GitHubAction-AssumeRoleWithAction"
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan And Apply (if merged)
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Allows GitHub to authenticate with AWS
+      contents: read
+    strategy:
+      matrix:
+        workspace: [pmi]
+        account_role: [ "arn:aws:iam::689537938064:role/GitHubAction-AssumeRoleWithAction" ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ matrix.account_role }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+          unset-current-credentials: false
+
+      - name: Debug AWS Credentials
+        run: |
+          echo "Verifying AWS Role Assumption..."
+          aws sts get-caller-identity
+          aws s3 ls
+
+      - name: Terraform Init
+        env:
+          AWS_REGION: us-east-1
+        run: |
+          export AWS_REGION=us-east-1
+          terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan-${{ matrix.workspace }} -var-file="environments/${{ matrix.workspace }}/terraform.tfvars"
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master'
+        run: terraform apply -auto-approve -var-file="environments/${{ matrix.workspace }}/terraform.tfvars"
